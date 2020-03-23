@@ -5,4 +5,4 @@ name = "led-roulette1"
 version = "0.0.1"
 
 [dependencies]
-aux5 = { path = "auxiliary" }
+f3jt = { path = "f3jt" }

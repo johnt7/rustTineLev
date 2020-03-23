@@ -9,15 +9,15 @@
  * - replace aux with specific for system
  * - use systtick instead of main loop
  * ******/
-use aux5::{entry, prelude::*, Delay, Leds, gpioa, GPIOA};
+use f3jt::{entry, Delay, Leds, GPIOA, Button, OutPorts};
 
 #[entry]
 fn main() -> ! {
-    let (mut delay, mut leds, mut gpa): (Delay, Leds, gpioa::Parts) = aux5::init();
+    let (mut delay, mut leds, mut button, mut ports): (Delay, Leds, Button, OutPorts) = f3jt::init();
 
     // set pa0 as input
-    let f = gpa.pa0.into_floating_input(&mut gpa.moder, &mut gpa.pupdr);
-    let g = gpa.pa1.into_push_pull_output(&mut gpa.moder, &mut gpa.otyper);
+//    let f = gpa.pa0.into_floating_input(&mut gpa.moder, &mut gpa.pupdr);
+//    let g = gpa.pa1.into_push_pull_output(&mut gpa.moder, &mut gpa.otyper);
 
     // PA0 - input from user (blue) button
     // PA1, PA2 - signal for one channel
@@ -39,6 +39,11 @@ fn main() -> ! {
             delay.delay_ms(ms);
             leds[curr].off();
             delay.delay_ms(ms);
+            if button.isPushed() {
+                ms *=2;
+                while button.isPushed() {};
+            }
+            /*
             unsafe {
                 // A magic address!
 //                const GPIOA_IDR: u32 = 0x48000010;
@@ -49,6 +54,7 @@ fn main() -> ! {
                     while (&(*GPIOA::ptr()).idr.read().bits() & 0x0001) == 1 {};
                 }
             }
+            */
         }
     }
 }
