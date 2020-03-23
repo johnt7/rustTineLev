@@ -9,11 +9,11 @@
  * - replace aux with specific for system
  * - use systtick instead of main loop
  * ******/
-use f3jt::{entry, Delay, Leds, GPIOA, Button, OutPorts};
+use f3jt::{entry, prelude::*, Delay, Leds, Button, OutPorts};
 
 #[entry]
 fn main() -> ! {
-    let (mut delay, mut leds, mut button, mut ports): (Delay, Leds, Button, OutPorts) = f3jt::init();
+    let (mut delay, mut leds, button, mut ports): (Delay, Leds, Button, OutPorts) = f3jt::init();
 
     // set pa0 as input
 //    let f = gpa.pa0.into_floating_input(&mut gpa.moder, &mut gpa.pupdr);
@@ -39,9 +39,9 @@ fn main() -> ! {
             delay.delay_ms(ms);
             leds[curr].off();
             delay.delay_ms(ms);
-            if button.isPushed() {
+            if button.is_pushed() {
                 ms *=2;
-                while button.isPushed() {};
+                while button.is_pushed() {};
             }
             /*
             unsafe {

@@ -31,12 +31,12 @@ pub fn init() -> (Delay, Leds, Button, OutPorts) {
     let delay = Delay::new(cp.SYST, clocks);
 
     let leds = Leds::new(dp.GPIOE.split(&mut rcc.ahb));
-    let (button, ports) = createLev(&mut dp.GPIOA.split(&mut rcc.ahb));
+    let (button, ports) = create_lev(dp.GPIOA.split(&mut rcc.ahb));
        
     (delay, leds, button, ports)
 }
 
-fn createLev(&mut gpa: &mut gpioa::Parts) -> (Button, Ports) {
+fn create_lev(mut gpa: gpioa::Parts) -> (Button, OutPorts) {
     gpa.pa0.into_floating_input(&mut gpa.moder, &mut gpa.pupdr);
     ( Button {
         idr : 
@@ -53,11 +53,11 @@ fn createLev(&mut gpa: &mut gpioa::Parts) -> (Button, Ports) {
 }
 
 pub struct Button {
-    idr : &'static stm32f30x::gpioa::IDR
+    pub idr : &'static stm32f30x::gpioa::IDR
 }
 
 impl Button {
-     fn isPushed(&self) -> bool {
+    pub fn is_pushed(&self) -> bool {
         self.idr.read().bits() & 0x1 == 1
     }
 }
